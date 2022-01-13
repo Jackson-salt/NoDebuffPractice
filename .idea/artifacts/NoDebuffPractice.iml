@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="NoDebuffPractice:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/NoDebuffPractice</output-path>
+    <root id="archive" name="NoDebuffPractice.jar">
+      <element id="module-output" name="NoDebuffPractice" />
+    </root>
+  </artifact>
+</component>
