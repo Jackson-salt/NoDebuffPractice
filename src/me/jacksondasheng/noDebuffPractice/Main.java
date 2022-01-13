@@ -48,6 +48,7 @@ public class Main extends Thread implements KeyListener {
 
     public static void main(String[] args) {
         frame.setBounds(0, 0, frameWidth, frameHeight);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addKeyListener(new Main());
         refresh();
         frame.add(panel);
