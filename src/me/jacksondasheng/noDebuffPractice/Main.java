@@ -1,18 +1,18 @@
 package me.jacksondasheng.noDebuffPractice;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class Main extends Thread implements KeyListener {
     public static ArrayList<Pot> pots = new ArrayList<Pot>();
     public static ArrayList<Splash> splashes = new ArrayList<Splash>();
     public static JFrame frame = new JFrame("NoDebuff Practice");
     public static JPanel panel;
-    public static ArrayList<Integer> potXs = new ArrayList<Integer>(),
-    potYs = new ArrayList<Integer>();
     public static Color player1Color = Color.GREEN,
     player2Color = Color.BLUE,
     potColor = Color.RED,
