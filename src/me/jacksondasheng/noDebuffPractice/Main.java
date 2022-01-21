@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class Main extends Thread implements KeyListener {
+public class Main implements KeyListener {
     public static ArrayList<Pot> pots = new ArrayList<Pot>();
     public static ArrayList<Splash> splashes = new ArrayList<Splash>();
     public static JFrame frame = new JFrame("NoDebuff Practice");
@@ -79,16 +79,98 @@ public class Main extends Thread implements KeyListener {
             }
             
             case 81: {
-                Main player1ThrowPearl = new Main();
-                player1ThrowPearl.setName("player1ThrowPearl");
-                player1ThrowPearl.start();
+                new Thread() {
+                    @Override
+                    public void run() {
+                        if(player1PearlCooldown == 0) {
+                            new Thread() {
+                                @Override
+                                public void run() {
+                                    for(int i = maxPearlCooldown; i >= 0; i--) {
+                                        player1PearlCooldown = i;
+                                        refresh();
+                                        
+                                        try {
+                                            Thread.sleep(1000);
+                                        } catch(InterruptedException exc) {}
+                                    }
+                                }
+                            }.start();
+                            
+                            int pearlFacingX = player1FacingX,
+                            pearlFacingY = player1FacingY;
+                            player1PearlX = player1X;
+                            player1PearlY = player1Y;
+                            
+                            for(int i = 0; i < 20; i++) {
+                                int newX = player1PearlX + pearlFacingX,
+                                newY = player1PearlY + pearlFacingY;
+                                
+                                if(outOfMap(newX, newY) || blockedByPlayer2(newX, newY)) {
+                                    break;
+                                }
+                                
+                                refresh();
+                                player1PearlX += pearlFacingX;
+                                player1PearlY += pearlFacingY;
+                                
+                                try {
+                                    Thread.sleep(50);
+                                } catch(InterruptedException exc) {}
+                            }
+                            
+                            player1X = player1PearlX;
+                            player1Y = player1PearlY;
+                            player1PearlX = -1;
+                            player1PearlY = -1;
+                            refresh();
+                        }
+                    }
+                }.start();
+                
                 break;
             }
             
             case 69: {
-                Main player1ThrowPot = new Main();
-                player1ThrowPot.setName("player1ThrowPot");
-                player1ThrowPot.start();
+                new Thread() {
+                    @Override
+                    public void run() {
+                        if(player1Pots > 0) {
+                            int potFacingX = player1FacingX,
+                            potFacingY = player1FacingY,
+                            potX = player1X,
+                            potY = player1Y;
+                            player1Pots--;
+                            
+                            for(int i = 0; i < 3; i++) {
+                                potX += potFacingX;
+                                potY += potFacingY;
+                                
+                                Pot pot = new Pot(potX, potY);
+                                pots.add(pot);
+                                refresh();
+                                
+                                try {
+                                    Thread.sleep(200);
+                                } catch(InterruptedException exc) {}
+                                
+                                pots.remove(pot);
+                                
+                                if(outOfMap(potX, potY) || blockedByPlayer1(potX, potY) || blockedByPlayer2(potX, potY)) {
+                                    break;
+                                }
+                                
+                                refresh();
+                            }
+                            
+                            healPlayer1((int) (4 - Math.sqrt(Math.pow(potX - player1X, 2) + Math.pow(potY - player1Y, 2))));
+                            healPlayer2((int) (4 - Math.sqrt(Math.pow(potX - player2X, 2) + Math.pow(potY - player2Y, 2))));
+                            refresh();
+                            splash(potX, potY);
+                        }
+                    }
+                }.start();
+                
                 break;
             }
             
@@ -113,197 +195,99 @@ public class Main extends Thread implements KeyListener {
             }
             
             case 47: {
-                Main player2ThrowPearl = new Main();
-                player2ThrowPearl.setName("player2ThrowPearl");
-                player2ThrowPearl.start();
+                new Thread() {
+                    @Override
+                    public void run() {
+                        if(player2Pots > 0) {
+                        int potFacingX = player2FacingX,
+                        potFacingY = player2FacingY,
+                        potX = player2X,
+                        potY = player2Y;
+                        player2Pots--;
+                        
+                        for(int i = 0; i < 3; i++) {
+                            potX += potFacingX;
+                            potY += potFacingY;
+                            
+                            Pot pot = new Pot(potX, potY);
+                            pots.add(pot);
+                            refresh();
+                            
+                            try {
+                                Thread.sleep(200);
+                            } catch(InterruptedException exc) {}
+                            
+                            pots.remove(pot);
+                            
+                            if(outOfMap(potX, potY) || blockedByPlayer1(potX, potY) || blockedByPlayer2(potX, potY)) {
+                                break;
+                            }
+                            
+                            refresh();
+                        }
+                        
+                        healPlayer1((int) (4 - Math.sqrt(Math.pow(potX - player1X, 2) + Math.pow(potY - player1Y, 2))));
+                        healPlayer2((int) (4 - Math.sqrt(Math.pow(potX - player2X, 2) + Math.pow(potY - player2Y, 2))));
+                        refresh();
+                        splash(potX, potY);
+                    }
+                    }
+                }.start();
+                
                 break;
             }
             
             case 16: {
-                Main player2ThrowPot = new Main();
-                player2ThrowPot.setName("player2ThrowPot");
-                player2ThrowPot.start();
-                break;
-            }
-        }
-    }
-    
-    public void run() {
-        switch(getName()) {
-            case "player1ThrowPot": {
-                if(player1Pots > 0) {
-                    int potFacingX = player1FacingX,
-                    potFacingY = player1FacingY,
-                    potX = player1X,
-                    potY = player1Y;
-                    player1Pots--;
-                    
-                    for(int i = 0; i < 3; i++) {
-                        potX += potFacingX;
-                        potY += potFacingY;
-                        
-                        Pot pot = new Pot(potX, potY);
-                        pots.add(pot);
-                        refresh();
-                        
-                        try {
-                            Thread.sleep(200);
-                        } catch(InterruptedException exc) {}
-                        
-                        pots.remove(pot);
-                        
-                        if(outOfMap(potX, potY) || blockedByPlayer1(potX, potY) || blockedByPlayer2(potX, potY)) {
-                            break;
+                new Thread() {
+                    @Override
+                    public void run() {
+                        if(player2PearlCooldown == 0) {
+                            new Thread() {
+                                @Override
+                                public void run() {
+                                    for(int i = maxPearlCooldown; i >= 0; i--) {
+                                        player2PearlCooldown = i;
+                                        refresh();
+                                        
+                                        try {
+                                            Thread.sleep(1000);
+                                        } catch(InterruptedException exc) {}
+                                    }
+                                }
+                            }.start();
+                            
+                            int pearlFacingX = player2FacingX,
+                            pearlFacingY = player2FacingY;
+                            player2PearlX = player2X;
+                            player2PearlY = player2Y;
+                            
+                            for(int i = 0; i < 20; i++) {
+                                int newX = player2PearlX + pearlFacingX,
+                                newY = player2PearlY + pearlFacingY;
+                                
+                                if(outOfMap(newX, newY) || blockedByPlayer1(newX, newY)) {
+                                    break;
+                                }
+                                
+                                refresh();
+                                player2PearlX += pearlFacingX;
+                                player2PearlY += pearlFacingY;
+                                
+                                try {
+                                    Thread.sleep(50);
+                                } catch(InterruptedException exc) {}
+                            }
+                            
+                            player2X = player2PearlX;
+                            player2Y = player2PearlY;
+                            player2PearlX = -1;
+                            player2PearlY = -1;
+                            refresh();
                         }
-                        
-                        refresh();
                     }
-                    
-                    healPlayer1((int) (4 - Math.sqrt(Math.pow(potX - player1X, 2) + Math.pow(potY - player1Y, 2))));
-                    healPlayer2((int) (4 - Math.sqrt(Math.pow(potX - player2X, 2) + Math.pow(potY - player2Y, 2))));
-                    refresh();
-                    splash(potX, potY);
-                }
+                }.start();
                 
                 break;
-            }
-            
-            case "player2ThrowPot": {
-                if(player2Pots > 0) {
-                    int potFacingX = player2FacingX,
-                    potFacingY = player2FacingY,
-                    potX = player2X,
-                    potY = player2Y;
-                    player2Pots--;
-                    
-                    for(int i = 0; i < 3; i++) {
-                        potX += potFacingX;
-                        potY += potFacingY;
-                        
-                        Pot pot = new Pot(potX, potY);
-                        pots.add(pot);
-                        refresh();
-                        
-                        try {
-                            Thread.sleep(200);
-                        } catch(InterruptedException exc) {}
-                        
-                        pots.remove(pot);
-                        
-                        if(outOfMap(potX, potY) || blockedByPlayer1(potX, potY) || blockedByPlayer2(potX, potY)) {
-                            break;
-                        }
-                        
-                        refresh();
-                    }
-                    
-                    healPlayer1((int) (4 - Math.sqrt(Math.pow(potX - player1X, 2) + Math.pow(potY - player1Y, 2))));
-                    healPlayer2((int) (4 - Math.sqrt(Math.pow(potX - player2X, 2) + Math.pow(potY - player2Y, 2))));
-                    refresh();
-                    splash(potX, potY);
-                }
-                
-                break;
-            }
-            
-            case "player1ThrowPearl": {
-                if(player1PearlCooldown == 0) {
-                    Main newPlayer1PearlCooldown = new Main();
-                    newPlayer1PearlCooldown.setName("newPlayer1PearlCooldown");
-                    newPlayer1PearlCooldown.start();
-                    
-                    int pearlFacingX = player1FacingX,
-                    pearlFacingY = player1FacingY;
-                    player1PearlX = player1X;
-                    player1PearlY = player1Y;
-                    
-                    for(int i = 0; i < 20; i++) {
-                        int newX = player1PearlX + pearlFacingX,
-                        newY = player1PearlY + pearlFacingY;
-                        
-                        if(outOfMap(newX, newY) || blockedByPlayer2(newX, newY)) {
-                            break;
-                        }
-                        
-                        refresh();
-                        player1PearlX += pearlFacingX;
-                        player1PearlY += pearlFacingY;
-                        
-                        try {
-                            Thread.sleep(50);
-                        } catch(InterruptedException exc) {}
-                    }
-                    
-                    player1X = player1PearlX;
-                    player1Y = player1PearlY;
-                    player1PearlX = -1;
-                    player1PearlY = -1;
-                    refresh();
-                }
-                
-                break;
-            }
-            
-            case "player2ThrowPearl": {
-                if(player2PearlCooldown == 0) {
-                    Main newPlayer2PearlCooldown = new Main();
-                    newPlayer2PearlCooldown.setName("newPlayer2PearlCooldown");
-                    newPlayer2PearlCooldown.start();
-                    
-                    int pearlFacingX = player2FacingX,
-                    pearlFacingY = player2FacingY;
-                    player2PearlX = player2X;
-                    player2PearlY = player2Y;
-                    
-                    for(int i = 0; i < 20; i++) {
-                        int newX = player2PearlX + pearlFacingX,
-                        newY = player2PearlY + pearlFacingY;
-                        
-                        if(outOfMap(newX, newY) || blockedByPlayer1(newX, newY)) {
-                            break;
-                        }
-                        
-                        refresh();
-                        player2PearlX += pearlFacingX;
-                        player2PearlY += pearlFacingY;
-                        
-                        try {
-                            Thread.sleep(50);
-                        } catch(InterruptedException exc) {}
-                    }
-                    
-                    player2X = player2PearlX;
-                    player2Y = player2PearlY;
-                    player2PearlX = -1;
-                    player2PearlY = -1;
-                    refresh();
-                }
-                
-                break;
-            }
-            
-            case "newPlayer1PearlCooldown": {
-                for(int i = maxPearlCooldown; i >= 0; i--) {
-                    player1PearlCooldown = i;
-                    refresh();
-                    
-                    try {
-                        Thread.sleep(1000);
-                    } catch(InterruptedException exc) {}
-                }
-                
-                break;
-            }
-            
-            case "newPlayer2PearlCooldown": {
-                for(int i = maxPearlCooldown; i >= 0; i--) {
-                    player2PearlCooldown = i;
-                    refresh();
-                    
-                    try {
-                        Thread.sleep(1000);
-                    } catch(InterruptedException exc) {}
-                }
             }
         }
     }
