@@ -508,7 +508,7 @@ public class Main implements KeyListener {
     }
     
     public static class Splash {
-        int x, y, range;
+        private int x, y, range;
         
         public Splash(int x, int y, int range) {
             this.x = x;
