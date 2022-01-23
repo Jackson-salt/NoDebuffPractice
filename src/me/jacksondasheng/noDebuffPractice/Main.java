@@ -82,6 +82,49 @@ public class Main implements KeyListener {
                 new Thread() {
                     @Override
                     public void run() {
+                        if(player1Pots > 0) {
+                            int potFacingX = player1FacingX,
+                            potFacingY = player1FacingY,
+                            potX = player1X,
+                            potY = player1Y;
+                            player1Pots--;
+                            
+                            for(int i = 0; i < 3; i++) {
+                                potX += potFacingX;
+                                potY += potFacingY;
+                                
+                                Pot pot = new Pot(potX, potY);
+                                pots.add(pot);
+                                refresh();
+                                
+                                try {
+                                    Thread.sleep(200);
+                                } catch(InterruptedException exc) {}
+                                
+                                pots.remove(pot);
+                                
+                                if(outOfMap(potX, potY) || blockedByPlayer1(potX, potY) || blockedByPlayer2(potX, potY)) {
+                                    break;
+                                }
+                                
+                                refresh();
+                            }
+                            
+                            healPlayer1((int) (4 - Math.sqrt(Math.pow(potX - player1X, 2) + Math.pow(potY - player1Y, 2))));
+                            healPlayer2((int) (4 - Math.sqrt(Math.pow(potX - player2X, 2) + Math.pow(potY - player2Y, 2))));
+                            refresh();
+                            splash(potX, potY);
+                        }
+                    }
+                }.start();
+                
+                break;
+            }
+            
+            case 69: {
+                new Thread() {
+                    @Override
+                    public void run() {
                         if(player1PearlCooldown == 0) {
                             new Thread() {
                                 @Override
@@ -124,49 +167,6 @@ public class Main implements KeyListener {
                             player1PearlX = -1;
                             player1PearlY = -1;
                             refresh();
-                        }
-                    }
-                }.start();
-                
-                break;
-            }
-            
-            case 69: {
-                new Thread() {
-                    @Override
-                    public void run() {
-                        if(player1Pots > 0) {
-                            int potFacingX = player1FacingX,
-                            potFacingY = player1FacingY,
-                            potX = player1X,
-                            potY = player1Y;
-                            player1Pots--;
-                            
-                            for(int i = 0; i < 3; i++) {
-                                potX += potFacingX;
-                                potY += potFacingY;
-                                
-                                Pot pot = new Pot(potX, potY);
-                                pots.add(pot);
-                                refresh();
-                                
-                                try {
-                                    Thread.sleep(200);
-                                } catch(InterruptedException exc) {}
-                                
-                                pots.remove(pot);
-                                
-                                if(outOfMap(potX, potY) || blockedByPlayer1(potX, potY) || blockedByPlayer2(potX, potY)) {
-                                    break;
-                                }
-                                
-                                refresh();
-                            }
-                            
-                            healPlayer1((int) (4 - Math.sqrt(Math.pow(potX - player1X, 2) + Math.pow(potY - player1Y, 2))));
-                            healPlayer2((int) (4 - Math.sqrt(Math.pow(potX - player2X, 2) + Math.pow(potY - player2Y, 2))));
-                            refresh();
-                            splash(potX, potY);
                         }
                     }
                 }.start();
