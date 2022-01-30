@@ -2,6 +2,7 @@ package me.jacksondasheng.noDebuffPractice;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class Main implements KeyListener {
     player2PearlY = -1;
 
     public static void main(String[] args) {
-        frame.setBounds(0, 0, frameWidth, frameHeight);
+        frame.setBounds((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2 - frameWidth / 2, (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2 - frameHeight / 2, frameWidth, frameHeight);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addKeyListener(new Main());
         refresh();
