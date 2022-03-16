@@ -48,8 +48,8 @@ public class Main implements KeyListener {
     player2PearlY = -1;
 
     public static void main(String[] args) {
-        frame.setBounds((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2 - frameWidth / 2, (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2 - frameHeight / 2, frameWidth, frameHeight);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setBounds((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2 - frameWidth / 2, (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2 - frameHeight / 2, frameWidth, frameHeight);
         frame.addKeyListener(new Main());
         refresh();
         frame.add(panel);
