@@ -13,7 +13,6 @@ public class Main implements KeyListener {
     public static ArrayList<Pot> pots = new ArrayList<Pot>();
     public static ArrayList<Splash> splashes = new ArrayList<Splash>();
     public static JFrame frame = new JFrame("NoDebuff Practice");
-    public static JPanel panel;
     public static Color player1Color = Color.GREEN,
     player2Color = Color.BLUE,
     potColor = Color.RED,
@@ -52,7 +51,93 @@ public class Main implements KeyListener {
         frame.setBounds((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2 - frameWidth / 2, (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2 - frameHeight / 2, frameWidth, frameHeight);
         frame.addKeyListener(new Main());
         refresh();
-        frame.add(panel);
+        frame.add(
+                new JPanel() {
+                    @Override
+                    public void paint(Graphics graphics) {
+                        graphics.setColor(potColor);
+
+                        for(Splash splash : splashes) {
+                            int x = splash.getX() * 10, y = splash.getY() * 10;
+
+                            switch(splash.getRange()) {
+                                case 0: {
+                                    graphics.fillRect(x, y + 10, 10, 10);
+                                    graphics.fillRect(x + 10, y, 10, 10);
+                                    graphics.fillRect(x, y - 10, 10, 10);
+                                    graphics.fillRect(x - 10, y, 10, 10);
+
+                                    break;
+                                }
+
+                                case 1: {
+                                    graphics.fillRect(x, y + 20, 10, 10);
+                                    graphics.fillRect(x + 10, y + 10, 10, 10);
+                                    graphics.fillRect(x + 20, y, 10, 10);
+                                    graphics.fillRect(x + 10, y - 10, 10, 10);
+                                    graphics.fillRect(x, y - 20, 10, 10);
+                                    graphics.fillRect(x - 10, y - 10, 10, 10);
+                                    graphics.fillRect(x - 20, y, 10, 10);
+                                    graphics.fillRect(x - 10, y + 10, 10, 10);
+
+                                    break;
+                                }
+
+                                case 2: {
+                                    graphics.fillRect(x, y + 30, 10, 10);
+                                    graphics.fillRect(x + 10, y + 20, 10, 10);
+                                    graphics.fillRect(x + 20, y + 10, 10, 10);
+                                    graphics.fillRect(x + 30, y, 10, 10);
+                                    graphics.fillRect(x + 20, y - 10, 10, 10);
+                                    graphics.fillRect(x + 10, y - 20, 10, 10);
+                                    graphics.fillRect(x, y - 30, 10, 10);
+                                    graphics.fillRect(x - 10, y - 20, 10, 10);
+                                    graphics.fillRect(x - 20, y - 10, 10, 10);
+                                    graphics.fillRect(x - 30, y, 10, 10);
+                                    graphics.fillRect(x - 20, y + 10, 10, 10);
+                                    graphics.fillRect(x - 10, y + 20, 10, 10);
+                                }
+                            }
+                        }
+
+                        for(Pot pot : pots) {
+                            graphics.fillRect(pot.getX() * 10, pot.getY() * 10, 10, 10);
+                        }
+
+                        graphics.setColor(player1Color);
+                        graphics.fillRect(player1X * 10, player1Y * 10, 10, 10);
+                        graphics.setColor(player2Color);
+                        graphics.fillRect(player2X * 10, player2Y * 10, 10, 10);
+
+                        graphics.setColor(pearlColor);
+                        graphics.fillRect(player1PearlX * 10, player1PearlY * 10, 10, 10);
+                        graphics.fillRect(player2PearlX * 10, player2PearlY * 10, 10, 10);
+
+                        graphics.setColor(statsColor);
+                        graphics.fillRect(0, frameWidth, frameWidth, frameHeight - frameWidth);
+
+                        graphics.setColor(statsBackgroundColor);
+                        graphics.fillRect(10, frameWidth + 10, maxHealth * 10, 10);
+                        graphics.fillRect(170, frameWidth + 10, maxHealth * 10, 10);
+                        graphics.fillRect(10, frameWidth + 30, maxPots * 10, 10);
+                        graphics.fillRect(170, frameWidth + 30, maxPots * 10, 10);
+                        graphics.fillRect(10, frameWidth + 50, maxPearlCooldown * 10, 10);
+                        graphics.fillRect(170, frameWidth + 50, maxPearlCooldown * 10, 10);
+
+                        graphics.setColor(player1Color);
+                        graphics.fillRect(10, frameWidth + 10, player1Health * 10, 10);
+                        graphics.setColor(player2Color);
+                        graphics.fillRect(170, frameWidth + 10, player2Health * 10, 10);
+                        graphics.setColor(potColor);
+                        graphics.fillRect(10, frameWidth + 30, player1Pots * 10, 10);
+                        graphics.fillRect(170, frameWidth + 30, player2Pots * 10, 10);
+                        graphics.setColor(pearlColor);
+                        graphics.fillRect(10, frameWidth + 50, player1PearlCooldown * 10, 10);
+                        graphics.fillRect(170, frameWidth + 50, player2PearlCooldown * 10, 10);
+                    }
+                }
+        );
+
         frame.setVisible(true);
     }
     
@@ -354,91 +439,6 @@ public class Main implements KeyListener {
     }
 
     public static void refresh() {
-        panel = new JPanel() {
-            @Override
-            public void paint(Graphics graphics) {
-                graphics.setColor(potColor);
-                
-                for(Splash splash : splashes) {
-                    int x = splash.getX() * 10, y = splash.getY() * 10;
-                    
-                    switch(splash.getRange()) {
-                        case 0: {
-                            graphics.fillRect(x, y + 10, 10, 10);
-                            graphics.fillRect(x + 10, y, 10, 10);
-                            graphics.fillRect(x, y - 10, 10, 10);
-                            graphics.fillRect(x - 10, y, 10, 10);
-                            
-                            break;
-                        }
-                        
-                        case 1: {
-                            graphics.fillRect(x, y + 20, 10, 10);
-                            graphics.fillRect(x + 10, y + 10, 10, 10);
-                            graphics.fillRect(x + 20, y, 10, 10);
-                            graphics.fillRect(x + 10, y - 10, 10, 10);
-                            graphics.fillRect(x, y - 20, 10, 10);
-                            graphics.fillRect(x - 10, y - 10, 10, 10);
-                            graphics.fillRect(x - 20, y, 10, 10);
-                            graphics.fillRect(x - 10, y + 10, 10, 10);
-                            
-                            break;
-                        }
-                        
-                        case 2: {
-                            graphics.fillRect(x, y + 30, 10, 10);
-                            graphics.fillRect(x + 10, y + 20, 10, 10);
-                            graphics.fillRect(x + 20, y + 10, 10, 10);
-                            graphics.fillRect(x + 30, y, 10, 10);
-                            graphics.fillRect(x + 20, y - 10, 10, 10);
-                            graphics.fillRect(x + 10, y - 20, 10, 10);
-                            graphics.fillRect(x, y - 30, 10, 10);
-                            graphics.fillRect(x - 10, y - 20, 10, 10);
-                            graphics.fillRect(x - 20, y - 10, 10, 10);
-                            graphics.fillRect(x - 30, y, 10, 10);
-                            graphics.fillRect(x - 20, y + 10, 10, 10);
-                            graphics.fillRect(x - 10, y + 20, 10, 10);
-                        }
-                    }
-                }
-                
-                for(Pot pot : pots) {
-                    graphics.fillRect(pot.getX() * 10, pot.getY() * 10, 10, 10);
-                }
-                
-                graphics.setColor(player1Color);
-                graphics.fillRect(player1X * 10, player1Y * 10, 10, 10);
-                graphics.setColor(player2Color);
-                graphics.fillRect(player2X * 10, player2Y * 10, 10, 10);
-                
-                graphics.setColor(pearlColor);
-                graphics.fillRect(player1PearlX * 10, player1PearlY * 10, 10, 10);
-                graphics.fillRect(player2PearlX * 10, player2PearlY * 10, 10, 10);
-
-                graphics.setColor(statsColor);
-                graphics.fillRect(0, frameWidth, frameWidth, frameHeight - frameWidth);
-
-                graphics.setColor(statsBackgroundColor);
-                graphics.fillRect(10, frameWidth + 10, maxHealth * 10, 10);
-                graphics.fillRect(170, frameWidth + 10, maxHealth * 10, 10);
-                graphics.fillRect(10, frameWidth + 30, maxPots * 10, 10);
-                graphics.fillRect(170, frameWidth + 30, maxPots * 10, 10);
-                graphics.fillRect(10, frameWidth + 50, maxPearlCooldown * 10, 10);
-                graphics.fillRect(170, frameWidth + 50, maxPearlCooldown * 10, 10);
-
-                graphics.setColor(player1Color);
-                graphics.fillRect(10, frameWidth + 10, player1Health * 10, 10);
-                graphics.setColor(player2Color);
-                graphics.fillRect(170, frameWidth + 10, player2Health * 10, 10);
-                graphics.setColor(potColor);
-                graphics.fillRect(10, frameWidth + 30, player1Pots * 10, 10);
-                graphics.fillRect(170, frameWidth + 30, player2Pots * 10, 10);
-                graphics.setColor(pearlColor);
-                graphics.fillRect(10, frameWidth + 50, player1PearlCooldown * 10, 10);
-                graphics.fillRect(170, frameWidth + 50, player2PearlCooldown * 10, 10);
-            }
-        };
-        
         if(!gameOver) {
             frame.repaint();
         }
